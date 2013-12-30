@@ -1,0 +1,127 @@
+bank:
+    account expenses:
+      pattern:
+        - addebito canone conto
+        - imposta di bollo di conto corrente
+    account bonus:
+      pattern:
+        - competenze
+    salary:
+      pattern:
+        - emolumenti
+    checks:
+      pattern:
+        - vs assegno n.
+    payment checks:
+      pattern:
+        - versamento atm assegno n. 
+caches:
+    withdrawal:
+      pattern:
+        - prelevamento carta 
+credit:
+    rechargeable:
+      pattern:
+        - addebito ricarica carta
+food:
+    food: 
+      pattern: 
+        - ipermercato
+home:
+    condo:
+      pattern:
+        - condominio    
+    maintenance:
+      pattern:
+        - faidate
+    forniture:
+      pattern:
+        - mondo casa
+car:
+    fine:
+      pattern:
+        - polizia municipale
+    maintenance:
+      pattern: 
+        - auto officina
+    insurance:
+      pattern: 
+        - polizza auto
+    fuel:
+      pattern: 
+        - distributore
+taxes:
+    local:
+      pattern:
+        - protocollo delega
+    garbage:
+      pattern:
+        - tassa rifiuti solidi urbani
+telco:
+    adsl:
+      pattern:
+        - operatore telecomunicazioni
+    cellular:
+      pattern:
+        - operatore rete mobile
+bills:
+    electricity:
+      pattern:
+        - elettricita'
+    water:
+      pattern:
+        - acqua
+health:
+    drugs:
+      pattern:
+        - farmacia
+    devices:
+      pattern:
+        - lenti e occhiali
+    exams:
+      pattern:
+        - ospedale
+        - clinica
+school:
+    school:
+      pattern:
+        - istituto scolastico
+clothing:
+    clothes:
+      pattern:
+        - grande magazzino 1
+        - grande magazzino 2
+    shoes:
+      pattern:
+        - negozio di scarpe
+entertainment:
+    wine:
+      pattern:
+        - enoteca
+    cinema:
+      pattern:
+        - the cinema
+    restaurants:
+      pattern:
+        - pizzeria
+    toys:
+      pattern:
+        - toys
+    books:
+      pattern:
+        - libri
+beauty:
+    stylist:
+      pattern:
+        - parrucchiere
+travels:
+    accommodation:
+      pattern:
+        - horse country
+    entertainment:
+      pattern:
+        - museo
+        - acquario
+    food:
+      pattern:
+        - tree  bar
