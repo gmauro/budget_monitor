@@ -2,63 +2,51 @@
 """
 import csv
 from math import copysign
+from time import strptime
 
 class MovementsReportReader(csv.DictReader):
     """
     A simple Movements Report reader.
     """
-    #reader = csv.reader
-    known = False
-    movements_type = ''
-    
     def __init__(self, f):
-        magic = [] 
-        magic.append(f.readline())
-        magic.append(f.readline())
+        self.known = False
+        magic = [f.readline(), f.readline()]
         if magic[0].startswith('Conto Corrente'):
             self.known = True
             self.movements_type = 'account'
-            header = []
             l = f.readline()
             while not l.startswith(','):
                 l = f.readline()
-            self.reader = csv.DictReader(f)
+            csv.DictReader.__init__(self, f)
         elif (magic[0].startswith(',') and magic[1].startswith('Carta di Credito')):
             self.known = True
             self.movements_type = 'rechargeable_credit_card'
-            header = ['Data Operazione', 'Data Valuta', 'Descrizione', 
-                      'Tipo operazione', 'Tipo rimborso', 'importo']
             block = []
             l = f.readline()
             while not l.startswith('Data'):
-                print l
                 l = f.readline()
-            #block.append(",".join(header))
             block.append(l)
             l = f.readline()
             l = f.readline()
             while not l.startswith(','):
                 block.append(l)
                 l = f.readline()
-            print block
-            self.reader = csv.DictReader(block)
-            print 'qui',  self.reader
+            csv.DictReader.__init__(self, block)
         else:  
             raise ValueError('%s is not a known Movements Report' % f.name)
 
-    def _get_movements_from_credit_card_report(self, reader):
+    def _get_movements_from_rechargeable_credit_card_report(self):
         """
         """
         block = []
-            #block.append(",".join(self.header))
-        for row in reader:
+        for row in self:
             amount = float(row['Importo in \xe2\x82\xac'])
             if self._sign(amount) == 1.0:
                 sign = False
             else:
                 sign = True
-            mv = {'transaction date': row['Data operazione'],
-                  'currency date': row['Data Registrazione'],
+            mv = {'transaction date': self._format_date(row['Data operazione']),
+                  'currency date': self._format_date(row['Data Registrazione']),
                   'description': row['Descrizione Operazione'],
                   'transaction type': 'credit card',
                   'refund type': '',
@@ -67,19 +55,19 @@ class MovementsReportReader(csv.DictReader):
             block.append(mv)
         return block
 
-    def _get_movements_from_account_report(self, reader):
+    def _get_movements_from_account_report(self):
         """
         """
         block = []
-        for row in reader:
+        for row in self:
             if row['Entrate'] != '':
                 amount = float(row['Entrate'])
                 sign = True
             else:
                 amount = float(row['Uscite'])
                 sign = False
-            mv = {'transaction date': row['Data Operazione'],
-                  'currency date': row['Data Valuta'],
+            mv = {'transaction date': self._format_date(row['Data Operazione']),
+                  'currency date': self._format_date(row['Data Valuta']),
                   'description': row['Descrizione Completa'],
                   'transaction type': row['Descrizione'],
                   'refund type': '',
@@ -88,13 +76,15 @@ class MovementsReportReader(csv.DictReader):
             block.append(mv)
         return block
 
+    def _format_date(self, mov_date):
+        return strptime(mov_date, "%d/%m/%Y")
+
     def _sign(self, x):
-        return lambda x: copysign(1, x)
+        return copysign(1, x)
 
     def get_movements(self):
-        print self.reader
         if self.movements_type == 'account':
-            return self._get_movements_from_account_report(self.reader)
+            return self._get_movements_from_account_report()
         if self.movements_type == 'rechargeable_credit_card':
-            return self._get_movements_from_credit_card_report(self.reader)
+            return self._get_movements_from_rechargeable_credit_card_report()
 
