@@ -61,8 +61,9 @@ def main(argv):
                 with open(os.path.join(path, files)) as f:
                     try:
                         data_reader = DataReader(f)
-                        for row in data_reader:
-                            mvs.add_from_account_report(row)
+                        for row in data_reader.get_movements():
+                            #print row
+                            mvs.add_movement_from_report(row)
                     except ValueError as e:
                         logger.info(e)
                 logger.info('number of movements recorded: %d' %
@@ -76,7 +77,7 @@ def main(argv):
     am = AM.Amounts(mvs, cf)
     logger.info('Total number of movements recorded: %d' % mvs.len())
     #am.show_annual_budget(2013)
-    am.show_monthly_budget(12, 2013)
+    am.show_monthly_budget(11, 2013)
     #am.show_all_monthly_budgets(2013)
 
     
