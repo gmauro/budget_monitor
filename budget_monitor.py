@@ -55,27 +55,28 @@ def main(argv):
         sys.exit('ERROR: input source is not a dir')
     else:
         path = args.input_dir
-        for files in os.listdir(args.input_dir):
-            if files.endswith('.csv'):
-                logger.info('importing file %s' % files)
-                with open(os.path.join(path, files)) as f:
-                    try:
-                        data_reader = DataReader(f)
-                        for row in data_reader.get_movements():
-                            #print row
-                            mvs.add_movement_from_report(row)
-                    except ValueError as e:
-                        logger.info(e)
-                logger.info('number of movements recorded: %d' %
-                            (mvs.len() - movements_recorded))
-                movements_recorded = mvs.len()
-                logger.info('number of movements not catched: %d' %
-                            (cf.get_not_catched() - movements_not_catched))
-                movements_not_catched = cf.get_not_catched()
+        for root, dirs, files in os.walk(path):
+            for _file in files:
+        #for files in os.listdir(args.input_dir):
+                if _file.endswith('.csv'):
+                    logger.info('importing file %s' % _file)
+                    with open(os.path.join(root, _file)) as f:
+                        try:
+                            data_reader = DataReader(f)
+                            for row in data_reader.get_movements():
+                                mvs.add_movement_from_report(row)
+                        except ValueError as e:
+                            logger.info(e)
+                    logger.info('number of movements recorded: %d' %
+                                (mvs.len() - movements_recorded))
+                    movements_recorded = mvs.len()
+                    logger.info('number of movements not catched: %d' %
+                                (cf.get_not_catched() - movements_not_catched))
+                    movements_not_catched = cf.get_not_catched()
 
 
     am = AM.Amounts(mvs, cf)
-    logger.info('Total number of movements recorded: %d' % mvs.len())
+    logger.info('Total number of movements recorded: {0:d}'.format(mvs.len()))
     #am.show_annual_budget(2013)
     am.show_monthly_budget(11, 2013)
     #am.show_all_monthly_budgets(2013)

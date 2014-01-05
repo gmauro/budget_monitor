@@ -26,7 +26,7 @@ class Amounts():
         for cat in main_categories:
             revenues[cat] = 0
             outputs[cat] = 0
-        for uid in self.movs.get_all_movements_uid():
+        for uid in self.movs.get_all_regular_movements_uid():
             details = self.movs.get_movement_details(uid)
             amount = details['amount']
             if (details['year'] == year and not month):
@@ -48,7 +48,7 @@ class Amounts():
         if (month):
             revenues[month] = 0
             outputs[month] = 0
-        for uid in self.movs.get_all_movements_uid():
+        for uid in self.movs.get_all_regular_movements_uid():
             details = self.movs.get_movement_details(uid)
             amount = details['amount']
             if (details['year'] == year):
